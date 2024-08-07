@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Philos6215 {
 
   public static final int ROW_COL_SIZE = 8;
@@ -68,13 +72,19 @@ public class Philos6215 {
       System.out.println();
       printPolyomino(FREE_POLYOMINOES[i]);
       System.out.println();
+      System.out.println("All fixed polyominoes for free polyomino #" + (i + 1));
+      for (int[][] fixedPolyomino : generateFixedPolyominoes(FREE_POLYOMINOES[i])) {
+        System.out.println();
+        printPolyomino(fixedPolyomino);
+        System.out.println();
+      }
     }
   }
-  
+
   public static void main(String[] args) {
     printBoard();
   }
-  
+
 //  private static void printPolyomino(int[][] polyomino) {
 //    assert polyomino.length > 0;
 //    assert polyomino[0].length > 0;
@@ -184,6 +194,59 @@ public class Philos6215 {
       return false;
     }
     return polyomino[row - 1][col - 1] > 0;
+  }
+
+  private static int[][] rotateClockwise(int[][] polyomino) {
+    int rows = polyomino.length;
+    int cols = polyomino[0].length;
+    int[][] rotated = new int[cols][rows];
+    for (int i = 0; i < cols; i++) {
+      for (int j = 0; j < rows; j++) {
+        rotated[i][j] = polyomino[rows - 1 - j][i];
+      }
+    }
+    return rotated;
+  }
+
+  private static int[][] flip(int[][] polyomino) {
+    int rows = polyomino.length;
+    int cols = polyomino[0].length;
+    int[][] flipped = new int[rows][cols];
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+        flipped[i][j] = polyomino[i][cols - 1 - j];
+      }
+    }
+    return flipped;
+  }
+
+  private static List<int[][]> generateFixedPolyominoes(int[][] polyomino) {
+    List<int[][]> fixedPolyominoes = new ArrayList<>();
+    fixedPolyominoes.add(polyomino);
+    int[][] rotated = rotateClockwise(polyomino);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    rotated = rotateClockwise(rotated);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    rotated = rotateClockwise(rotated);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    int[][] flipped = flip(polyomino);
+    addIfNotPresent(fixedPolyominoes, flipped);
+    rotated = rotateClockwise(flipped);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    rotated = rotateClockwise(rotated);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    rotated = rotateClockwise(rotated);
+    addIfNotPresent(fixedPolyominoes, rotated);
+    return fixedPolyominoes;
+  }
+
+  private static void addIfNotPresent(List<int[][]> fixedPolyominoes, int[][] newFixed) {
+    for (int[][] existing : fixedPolyominoes) {
+      if (Arrays.deepEquals(existing, newFixed)) {
+        return;
+      }
+    }
+    fixedPolyominoes.add(newFixed);
   }
 
   private static void printBoard() {

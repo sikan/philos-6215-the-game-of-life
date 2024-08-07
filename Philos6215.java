@@ -85,55 +85,6 @@ public class Philos6215 {
     printBoard();
   }
 
-//  private static void printPolyomino(int[][] polyomino) {
-//    assert polyomino.length > 0;
-//    assert polyomino[0].length > 0;
-//    int rows = polyomino.length;
-//    int cols = polyomino[0].length;
-//    for (int row = 0; row < rows; row++) {
-//      for (int col = 0; col < cols; col++) {
-//        if (polyomino[row][col] > 0) {
-//          if ((row == 0 || polyomino[row - 1][col] == 0)) {
-//            System.out.print("+---");
-//          } else if (col == 0 || polyomino[row][col - 1] == 0) {
-//            System.out.print("+   ");
-//          } else {
-//            System.out.print("    ");
-//          }
-//        } else {
-//          if (col > 0 && polyomino[row][col - 1] > 0) {
-//            System.out.print("+   ");
-//          } else {
-//            System.out.print("    ");            
-//          }
-//        }
-//      }
-//      System.out.println("+");
-//      for (int col = 0; col < cols; col++) {
-//        if (polyomino[row][col] > 0) {
-//          if ((col == 0 || polyomino[row][col - 1] == 0)) {
-//            System.out.print("|   ");
-//          } else {
-//            System.out.print("    ");
-//          }
-//        } else {
-//          if (col > 0 && polyomino[row][col - 1] == 1) {
-//            System.out.print("|   ");
-//          } else {
-//            System.out.print("    ");
-//          }
-//        }
-//      }
-//      System.out.println("|");
-//    }
-//    for (int col = 0; col < cols; col++) {
-//      if (polyomino[rows - 1][col] > 0) {
-//        System.out.print("+---");
-//      }
-//    }
-//    System.out.println("+");
-//  }
-
   private static void printPolyomino(int[][] polyomino) {
     assert polyomino.length > 0;
     assert polyomino[0].length > 0;

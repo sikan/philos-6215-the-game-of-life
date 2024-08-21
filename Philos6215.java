@@ -66,6 +66,25 @@ public class Philos6215 {
       }
   };
 
+  //  +---+---+---+---+---+
+  //  |           |       |
+  //  +   +---+---+---+   +
+  //  |   |   |       |   |
+  //  +---+   +       +---+
+  //  |       |       |   |
+  //  +---+---+---+---+   +
+  //  |           |       |
+  //  +---+       +---+   +
+  //  |   |           |   |
+  //  +---+---+---+---+---+   
+  public static final int[][] SOLUTION_SAMPLE_5_BY_5 = {
+      { 1, 1, 1, 2, 2 },
+      { 1, 3, 4, 4, 2 },
+      { 3, 3, 4, 4, 9 },
+      { 5, 5, 5, 9, 9 },
+      { 8, 5, 5, 5, 9 } 
+  };
+
   static {
     for (int i = 0; i < FREE_POLYOMINOES.length; i++) {
       System.out.println("Free polyomino #" + (i + 1));
@@ -82,7 +101,7 @@ public class Philos6215 {
   }
 
   public static void main(String[] args) {
-    printBoard();
+    printSolution(SOLUTION_SAMPLE_5_BY_5);
   }
 
   private static void printPolyomino(int[][] polyomino) {
@@ -92,27 +111,27 @@ public class Philos6215 {
     int cols = polyomino[0].length;
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        if (!up(polyomino, row, col) && !left(polyomino, row, col)) {
+        if (!up(polyomino, row, col, false) && !left(polyomino, row, col, false)) {
           if (polyomino[row][col] > 0) {
             System.out.print("+---");
           } else {
-            System.out.print(upperLeft(polyomino, row, col) ? "+   " : "    ");
+            System.out.print(upperLeft(polyomino, row, col, false) ? "+   " : "    ");
           }
-        } else if (up(polyomino, row, col) && !left(polyomino, row, col)) {
+        } else if (up(polyomino, row, col, false) && !left(polyomino, row, col, false)) {
           System.out.print(polyomino[row][col] > 0 ? "+   " : "+---");
-        } else if (!up(polyomino, row, col) && left(polyomino, row, col)) {
+        } else if (!up(polyomino, row, col, false) && left(polyomino, row, col, false)) {
           System.out.print(polyomino[row][col] > 0 ? "+---" : "+   ");
         } else {
           if (polyomino[row][col] > 0) {
-            System.out.print(upperLeft(polyomino, row, col) ? "    " : "+   ");
+            System.out.print(upperLeft(polyomino, row, col, false) ? "    " : "+   ");
           } else {
             System.out.print("+---");
           }
         }
       }
-      System.out.println(polyomino[row][cols - 1] > 0 || up(polyomino, row, cols - 1) ? "+" : " ");
+      System.out.println(polyomino[row][cols - 1] > 0 || up(polyomino, row, cols - 1, false) ? "+" : " ");
       for (int col = 0; col < cols; col++) {
-        System.out.print(left(polyomino, row, col) == polyomino[row][col] > 0 ? "    " : "|   ");
+        System.out.print(left(polyomino, row, col, false) == polyomino[row][col] > 0 ? "    " : "|   ");
       }
       System.out.println(polyomino[row][cols - 1] > 0 ? "|" : " ");
     }
@@ -120,31 +139,35 @@ public class Philos6215 {
       if (polyomino[rows - 1][col] > 0) {
         System.out.print("+---");
       } else {
-        System.out.print(left(polyomino, rows - 1, col) ? "+   " : "    ");
+        System.out.print(left(polyomino, rows - 1, col, false) ? "+   " : "    ");
       }
     }
     System.out.println(polyomino[rows - 1][cols - 1] > 0 ? "+" : " ");
   }
 
-  private static boolean left(int[][] polyomino, int row, int col) {
+  /* solution: whether a is a complete solution or just a single polyomino? */
+  private static boolean left(int[][] a, int row, int col, boolean solution) {
+    assert !solution || a[row][col] > 0;
     if (col == 0) {
       return false;
     }
-    return polyomino[row][col - 1] > 0;
+    return solution ? a[row][col - 1] == a[row][col] : a[row][col - 1] > 0;
   }
 
-  private static boolean up(int[][] polyomino, int row, int col) {
+  private static boolean up(int[][] a, int row, int col, boolean solution) {
+    assert !solution || a[row][col] > 0;
     if (row == 0) {
       return false;
     }
-    return polyomino[row - 1][col] > 0;
+    return solution ? a[row - 1][col] == a[row][col] : a[row - 1][col] > 0;
   }
 
-  private static boolean upperLeft(int[][] polyomino, int row, int col) {
+  private static boolean upperLeft(int[][] a, int row, int col, boolean solution) {
+    assert !solution || a[row][col] > 0;
     if (row == 0 || col == 0) {
       return false;
     }
-    return polyomino[row - 1][col - 1] > 0;
+    return solution ? a[row - 1][col - 1] == a[row][col] : a[row - 1][col - 1] > 0;
   }
 
   private static int[][] rotateClockwise(int[][] polyomino) {
@@ -212,6 +235,34 @@ public class Philos6215 {
       System.out.println("|");
     }
     for (int col = 0; col < ROW_COL_SIZE; col++) {
+      System.out.print("+---");
+    }
+    System.out.println("+");
+  }
+
+  private static void printSolution(int[][] solution) {
+    assert solution.length > 0;
+    assert solution[0].length > 0;
+    int rows = solution.length;
+    int cols = solution[0].length;
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        assert solution[row][col] > 0;
+        if (!up(solution, row, col, true)) {
+          System.out.print("+---");
+        } else if (!left(solution, row, col, true)) {
+          System.out.print("+   ");
+        } else {
+          System.out.print(upperLeft(solution, row, col, true) ? "    " : "+   ");
+        }
+      }
+      System.out.println("+");
+      for (int col = 0; col < cols; col++) {
+        System.out.print(left(solution, row, col, true) ? "    " : "|   ");
+      }
+      System.out.println("|");
+    }
+    for (int col = 0; col < cols; col++) {
       System.out.print("+---");
     }
     System.out.println("+");
